@@ -1,0 +1,26 @@
+# =============================================
+# BookVault Library — Docker Compose
+# Runs the web app container
+# =============================================
+
+services:
+
+  # ── Web Application ─────────────────────
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bookvault-app
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+    volumes:
+      # Persist SQLite database outside container
+      - library_data:/app
+    restart: unless-stopped
+
+# ── Named Volumes ────────────────────────
+volumes:
+  library_data:

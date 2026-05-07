@@ -1,0 +1,107 @@
+@model LibraryMS.Models.Book
+@{
+    ViewData["Title"] = "Add Book";
+}
+
+<div class="mb-3">
+    <a href="/Books" style="color:#8b8fa8;text-decoration:none;font-size:0.9rem">
+        <i class="fas fa-arrow-left me-1"></i> Back to Books
+    </a>
+</div>
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">📚 Add New Book</h1>
+        <p class="page-subtitle">Fill in the details below to add a book to the collection</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card-custom p-4">
+            <form method="post" action="/Books/Create">
+                @Html.AntiForgeryToken()
+                <div class="row g-3">
+                    <div class="col-md-8">
+                        <label class="form-label">Book Title *</label>
+                        <input type="text" name="Title" class="form-control form-control-custom" placeholder="e.g. Clean Code" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Published Year</label>
+                        <input type="number" name="PublishedYear" class="form-control form-control-custom" placeholder="2024" min="1000" max="2099" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Author *</label>
+                        <input type="text" name="Author" class="form-control form-control-custom" placeholder="Author name" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">ISBN</label>
+                        <input type="text" name="ISBN" id="isbnInput" class="form-control form-control-custom" placeholder="978-XXXXXXXXXX" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Genre</label>
+                        <select name="Genre" class="form-select form-control-custom">
+                            <option value="">-- Select Genre --</option>
+                            <option>Technology</option>
+                            <option>Fiction</option>
+                            <option>Non-Fiction</option>
+                            <option>Science</option>
+                            <option>History</option>
+                            <option>Biography</option>
+                            <option>Self-Help</option>
+                            <option>Business</option>
+                            <option>Philosophy</option>
+                            <option>Religion</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Publisher</label>
+                        <input type="text" name="Publisher" class="form-control form-control-custom" placeholder="Publisher name" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Total Copies *</label>
+                        <input type="number" name="TotalCopies" class="form-control form-control-custom" value="1" min="1" required />
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Description</label>
+                        <textarea name="Description" class="form-control form-control-custom" rows="3" placeholder="Brief description of the book..."></textarea>
+                    </div>
+                </div>
+                <div class="d-flex gap-3 mt-4">
+                    <button type="submit" class="btn btn-gold px-5">
+                        <i class="fas fa-plus me-2"></i>Add Book
+                    </button>
+                    <a href="/Books" class="btn btn-outline-gold px-4">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card-custom p-4">
+            <h6 style="color:#c9a84c;margin-bottom:1rem"><i class="fas fa-image me-2"></i>Cover Preview</h6>
+            <div id="coverPreview" style="width:100%;height:250px;background:linear-gradient(135deg,#1a1e2e,#252a3d);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0.5rem">
+                <div style="font-size:3rem">📖</div>
+                <div style="color:#8b8fa8;font-size:0.8rem">Enter ISBN to preview cover</div>
+            </div>
+            <p class="mt-3 small" style="color:#8b8fa8">
+                <i class="fas fa-info-circle me-1"></i>
+                Book covers are automatically fetched from <strong style="color:#c9a84c">Open Library API</strong> using the ISBN.
+            </p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    document.getElementById('isbnInput').addEventListener('input', function() {
+        const isbn = this.value.replace(/-/g, '');
+        const preview = document.getElementById('coverPreview');
+        if (isbn.length >= 10) {
+            preview.innerHTML = `<img src="https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg"
+                style="width:100%;height:250px;object-fit:cover;border-radius:12px"
+                onerror="this.parentElement.innerHTML='<div style=\\'font-size:3rem\\'>📖</div><div style=\\'color:#8b8fa8;font-size:0.8rem;margin-top:0.5rem\\'>No cover found</div>'" />`;
+        }
+    });
+</script>
+}

@@ -1,0 +1,113 @@
+@model List<LibraryMS.Models.Book>
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<!-- STATS GRID -->
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Dashboard</h1>
+        <p class="page-subtitle">Welcome to BookVault Library Management System</p>
+    </div>
+    <div class="text-muted small">@DateTime.Now.ToString("dddd, dd MMMM yyyy")</div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-6">
+        <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(201,168,76,0.15)">📚</div>
+            <div class="stat-number" style="color:#c9a84c">@ViewBag.TotalBooks</div>
+            <div class="stat-label">Total Books</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(91,138,245,0.15)">👥</div>
+            <div class="stat-number" style="color:#5b8af5">@ViewBag.TotalMembers</div>
+            <div class="stat-label">Members</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(45,212,167,0.15)">📖</div>
+            <div class="stat-number" style="color:#2dd4a7">@ViewBag.ActiveLoans</div>
+            <div class="stat-label">Active Loans</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(255,107,107,0.15)">⚠️</div>
+            <div class="stat-number" style="color:#ff6b6b">@ViewBag.OverdueLoans</div>
+            <div class="stat-label">Overdue</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Recent Books -->
+    <div class="col-lg-8">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h5 style="font-family:'Playfair Display',serif;margin:0">Recently Added Books</h5>
+            <a href="/Books" class="btn-outline-gold btn btn-sm">View All</a>
+        </div>
+        <div class="row g-3">
+            @foreach (var book in Model)
+            {
+                <div class="col-md-4 col-6">
+                    <div class="book-card">
+                        @if (!string.IsNullOrEmpty(book.CoverImageUrl))
+                        {
+                            <img src="@book.CoverImageUrl" alt="@book.Title" class="book-cover"
+                                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+                        }
+                        <div class="book-cover-placeholder" @(string.IsNullOrEmpty(book.CoverImageUrl) ? "" : "style='display:none'")>📚</div>
+                        <div class="p-3">
+                            <div class="small fw-600 mb-1" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="@book.Title">@book.Title</div>
+                            <div class="small" style="color:#8b8fa8">@book.Author</div>
+                            <div class="mt-2">
+                                <span class="badge @(book.IsAvailable ? "badge-available" : "badge-unavailable")" style="font-size:0.7rem">
+                                    @(book.IsAvailable ? $"✓ {book.AvailableCopies} left" : "× Unavailable")
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Recent Loans -->
+    <div class="col-lg-4">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h5 style="font-family:'Playfair Display',serif;margin:0">Active Loans</h5>
+            <a href="/Loans" class="btn-outline-gold btn btn-sm">View All</a>
+        </div>
+        <div class="card-custom">
+            @if (ViewBag.RecentLoans is List<LibraryMS.Models.Loan> loans && loans.Count > 0)
+            {
+                @foreach (var loan in loans)
+                {
+                    <div class="p-3" style="border-bottom:1px solid rgba(201,168,76,0.1)">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="small fw-500" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">@loan.Book.Title</div>
+                                <div class="small" style="color:#8b8fa8">@loan.Member.FullName</div>
+                            </div>
+                            <span class="badge @(loan.IsOverdue ? "status-overdue" : "status-active")" style="font-size:0.7rem">
+                                @(loan.IsOverdue ? "Overdue" : "Active")
+                            </span>
+                        </div>
+                        <div class="small mt-1" style="color:#8b8fa8">Due: @loan.DueDate.ToString("dd MMM yyyy")</div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="p-4 text-center" style="color:#8b8fa8">
+                    <div style="font-size:2rem">📭</div>
+                    <div class="small mt-2">No active loans</div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

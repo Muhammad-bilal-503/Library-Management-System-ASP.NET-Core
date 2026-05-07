@@ -1,0 +1,89 @@
+@model LibraryMS.Models.Member
+@{
+    ViewData["Title"] = "Edit Member";
+}
+
+<div class="mb-3">
+    <a href="/Members" style="color:#8b8fa8;text-decoration:none;font-size:0.9rem">
+        <i class="fas fa-arrow-left me-1"></i> Back to Members
+    </a>
+</div>
+
+<div class="page-header">
+    <h1 class="page-title">✏️ Edit Member</h1>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card-custom p-4">
+            <form method="post" action="/Members/Edit/@Model.Id">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="Id" value="@Model.Id" />
+                <input type="hidden" name="MembershipId" value="@Model.MembershipId" />
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Full Name *</label>
+                        <input type="text" name="FullName" value="@Model.FullName" class="form-control form-control-custom" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Email Address *</label>
+                        <input type="email" name="Email" value="@Model.Email" class="form-control form-control-custom" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Phone Number</label>
+                        <input type="text" name="Phone" value="@Model.Phone" class="form-control form-control-custom" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Membership Type</label>
+                        <select name="MembershipType" class="form-select form-control-custom">
+                            @if (Model.MembershipType == LibraryMS.Models.MembershipType.Regular)
+                            { <option value="0" selected="selected">Regular</option> }
+                            else
+                            { <option value="0">Regular</option> }
+                            @if (Model.MembershipType == LibraryMS.Models.MembershipType.Student)
+                            { <option value="1" selected="selected">Student</option> }
+                            else
+                            { <option value="1">Student</option> }
+                            @if (Model.MembershipType == LibraryMS.Models.MembershipType.Premium)
+                            { <option value="2" selected="selected">Premium</option> }
+                            else
+                            { <option value="2">Premium</option> }
+                            @if (Model.MembershipType == LibraryMS.Models.MembershipType.Staff)
+                            { <option value="3" selected="selected">Staff</option> }
+                            else
+                            { <option value="3">Staff</option> }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Membership Expiry</label>
+                        <input type="date" name="MembershipExpiry" class="form-control form-control-custom"
+                               value="@Model.MembershipExpiry.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Status</label>
+                        <select name="IsActive" class="form-select form-control-custom">
+                            @if (Model.IsActive)
+                            {
+                                <option value="true" selected="selected">Active</option>
+                                <option value="false">Inactive</option>
+                            }
+                            else
+                            {
+                                <option value="true">Active</option>
+                                <option value="false" selected="selected">Inactive</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Address</label>
+                        <textarea name="Address" class="form-control form-control-custom" rows="2">@Model.Address</textarea>
+                    </div>
+                </div>
+                <div class="d-flex gap-3 mt-4">
+                    <button type="submit" class="btn btn-gold px-5"><i class="fas fa-save me-2"></i>Save Changes</button>
+                    <a href="/Members" class="btn btn-outline-gold px-4">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+@"
+# Visual Studio
+.vs/
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+
+# Logs
+*.log
+
+# Environment files
+.env
+"@ | Out-File -Encoding utf8 .gitignore

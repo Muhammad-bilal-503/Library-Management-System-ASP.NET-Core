@@ -1,0 +1,107 @@
+@model LibraryMS.Models.Book
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="mb-3">
+    <a href="/Books" style="color:#8b8fa8;text-decoration:none;font-size:0.9rem">
+        <i class="fas fa-arrow-left me-1"></i> Back to Books
+    </a>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-3">
+        <div class="card-custom p-0 overflow-hidden">
+            <img src="https://covers.openlibrary.org/b/isbn/@Model.ISBN.Replace("-","")-L.jpg"
+                 alt="@Model.Title" style="width:100%;min-height:300px;object-fit:cover"
+                 onerror="this.style.display='none';document.getElementById('cover-ph').style.display='flex'" />
+            <div id="cover-ph" style="display:none;min-height:300px;background:linear-gradient(135deg,#1a1e2e,#252a3d);align-items:center;justify-content:center;flex-direction:column;gap:1rem">
+                <div style="font-size:4rem">📖</div>
+                <div style="color:#8b8fa8;font-size:0.9rem">No cover available</div>
+            </div>
+        </div>
+        <div class="mt-3 d-flex gap-2">
+            <a href="/Books/Edit/@Model.Id" class="btn btn-gold flex-fill">
+                <i class="fas fa-edit me-1"></i> Edit
+            </a>
+            <a href="/Books/Delete/@Model.Id" class="btn btn-sm" style="background:rgba(255,107,107,0.1);color:#ff6b6b;border:1px solid rgba(255,107,107,0.3);border-radius:10px;padding:0.5rem 1rem">
+                <i class="fas fa-trash"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <div class="card-custom p-4 mb-3">
+            <div class="d-flex align-items-start justify-content-between mb-3">
+                <div>
+                    <h2 style="font-family:'Playfair Display',serif;margin-bottom:0.25rem">@Model.Title</h2>
+                    <div style="color:#8b8fa8;font-size:1rem">by @Model.Author</div>
+                </div>
+                <span class="badge @(Model.IsAvailable ? "badge-available" : "badge-unavailable")" style="font-size:0.85rem;padding:0.5rem 1rem">
+                    @(Model.IsAvailable ? "✓ Available" : "× Unavailable")
+                </span>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.Description))
+            {
+                <p style="color:#b0b4c8;line-height:1.7">@Model.Description</p>
+            }
+
+            <div class="row g-3 mt-2">
+                <div class="col-sm-6">
+                    <div style="background:#1a1e2e;border-radius:10px;padding:1rem">
+                        <div style="color:#8b8fa8;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em">ISBN</div>
+                        <div class="mt-1 fw-500">@Model.ISBN</div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div style="background:#1a1e2e;border-radius:10px;padding:1rem">
+                        <div style="color:#8b8fa8;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em">Genre</div>
+                        <div class="mt-1"><span class="badge badge-genre">@Model.Genre</span></div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div style="background:#1a1e2e;border-radius:10px;padding:1rem">
+                        <div style="color:#8b8fa8;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em">Publisher</div>
+                        <div class="mt-1 fw-500">@Model.Publisher (@Model.PublishedYear)</div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div style="background:#1a1e2e;border-radius:10px;padding:1rem">
+                        <div style="color:#8b8fa8;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em">Copies</div>
+                        <div class="mt-1 fw-500">@Model.AvailableCopies available of @Model.TotalCopies total</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loan History -->
+        @if (Model.Loans?.Any() == true)
+        {
+            <div class="card-custom p-4">
+                <h5 style="font-family:'Playfair Display',serif;margin-bottom:1rem">Loan History</h5>
+                <table class="table table-custom mb-0">
+                    <thead>
+                        <tr>
+                            <th>Member</th>
+                            <th>Issue Date</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var loan in Model.Loans.OrderByDescending(l => l.IssueDate))
+                        {
+                            <tr>
+                                <td>@loan.Member?.FullName</td>
+                                <td>@loan.IssueDate.ToString("dd MMM yyyy")</td>
+                                <td>@loan.DueDate.ToString("dd MMM yyyy")</td>
+                                <td><span class="badge status-@loan.Status.ToLower()">@loan.Status</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

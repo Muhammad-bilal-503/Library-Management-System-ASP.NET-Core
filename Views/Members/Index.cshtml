@@ -1,0 +1,101 @@
+@model List<LibraryMS.Models.Member>
+@{
+    ViewData["Title"] = "Members";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">👥 Members</h1>
+        <p class="page-subtitle">@Model.Count registered members</p>
+    </div>
+    <a href="/Members/Create" class="btn btn-gold px-4">
+        <i class="fas fa-user-plus me-2"></i>Add Member
+    </a>
+</div>
+
+<form method="get" class="search-bar">
+    <div class="row g-2 align-items-center">
+        <div class="col-md-8">
+            <div class="input-group">
+                <span class="input-group-text" style="background:#1a1e2e;border-color:rgba(201,168,76,0.15);color:#8b8fa8"><i class="fas fa-search"></i></span>
+                <input type="text" name="search" value="@ViewBag.Search" placeholder="Search by name, email, or member ID..."
+                       class="form-control form-control-custom" style="border-left:0" />
+            </div>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-gold w-100">Search</button>
+        </div>
+        <div class="col-md-2">
+            <a href="/Members" class="btn btn-outline-gold w-100">Reset</a>
+        </div>
+    </div>
+</form>
+
+<div class="card-custom">
+    <div class="table-responsive">
+        <table class="table table-custom mb-0">
+            <thead>
+                <tr>
+                    <th>Member</th>
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th>Phone</th>
+                    <th>Active Loans</th>
+                    <th>Expiry</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="8" class="text-center py-5" style="color:#8b8fa8">
+                            <div style="font-size:2.5rem">👤</div>
+                            <div class="mt-2">No members found</div>
+                        </td>
+                    </tr>
+                }
+                @foreach (var m in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <div style="width:38px;height:38px;background:linear-gradient(135deg,#c9a84c,#e8c97a);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#0d0f12;font-size:0.9rem;flex-shrink:0">
+                                    @m.FullName[0]
+                                </div>
+                                <div>
+                                    <div class="fw-500">@m.FullName</div>
+                                    <div class="small" style="color:#8b8fa8">@m.Email</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><code style="color:#c9a84c;background:rgba(201,168,76,0.1);padding:0.2em 0.5em;border-radius:4px">@m.MembershipId</code></td>
+                        <td><span class="badge badge-genre">@m.MembershipType</span></td>
+                        <td style="color:#8b8fa8">@m.Phone</td>
+                        <td>
+                            <span style="color:@(m.ActiveLoansCount > 0 ? "#5b8af5" : "#8b8fa8")">
+                                @m.ActiveLoansCount / 3
+                            </span>
+                        </td>
+                        <td style="color:@(m.MembershipExpiry < DateTime.Now ? "#ff6b6b" : "#8b8fa8");font-size:0.85rem">
+                            @m.MembershipExpiry.ToString("dd MMM yyyy")
+                        </td>
+                        <td>
+                            <span class="badge @(m.IsMembershipValid ? "badge-available" : "badge-unavailable")">
+                                @(m.IsMembershipValid ? "Active" : "Inactive")
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex gap-1">
+                                <a href="/Members/Details/@m.Id" class="btn btn-sm btn-outline-gold" style="font-size:0.75rem">View</a>
+                                <a href="/Members/Edit/@m.Id" class="btn btn-sm" style="background:rgba(91,138,245,0.1);color:#5b8af5;border:1px solid rgba(91,138,245,0.3);border-radius:8px;font-size:0.75rem"><i class="fas fa-edit"></i></a>
+                                <a href="/Members/Delete/@m.Id" class="btn btn-sm" style="background:rgba(255,107,107,0.1);color:#ff6b6b;border:1px solid rgba(255,107,107,0.3);border-radius:8px;font-size:0.75rem"><i class="fas fa-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,65 @@
+@{
+    ViewData["Title"] = "Login";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login — BookVault</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        body { background:#0d0f12; font-family:'DM Sans',sans-serif; min-height:100vh; display:flex; align-items:center; justify-content:center; }
+        .login-card { background:#141720; border:1px solid rgba(201,168,76,0.15); border-radius:20px; padding:3rem; width:100%; max-width:440px; }
+        .form-control { background:#1a1e2e !important; border:1px solid rgba(201,168,76,0.15) !important; color:#f0ece3 !important; border-radius:10px; padding:0.75rem 1rem; }
+        .form-control:focus { border-color:#c9a84c !important; box-shadow:0 0 0 3px rgba(201,168,76,0.1) !important; }
+        .form-control::placeholder { color:#8b8fa8; }
+        .btn-gold { background:#c9a84c; color:#0d0f12; font-weight:600; border:none; border-radius:10px; padding:0.75rem; width:100%; }
+        .btn-gold:hover { background:#e8c97a; color:#0d0f12; }
+        .alert-err { background:rgba(255,107,107,0.1); border:1px solid rgba(255,107,107,0.3); color:#ff6b6b; border-radius:10px; padding:0.75rem 1rem; }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="text-center mb-4">
+            <div style="font-size:3rem">📚</div>
+            <h2 style="font-family:'Playfair Display',serif;color:#c9a84c;margin-top:0.5rem">BookVault</h2>
+            <p style="color:#8b8fa8;font-size:0.9rem">Library Management System</p>
+        </div>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert-err mb-3"><i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]</div>
+        }
+
+        <form method="post" action="/Account/Login">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+            <div class="mb-3">
+                <label style="color:#8b8fa8;font-size:0.85rem;font-weight:500" class="mb-1">Email</label>
+                <input type="email" name="email" class="form-control" placeholder="admin@library.com" required />
+            </div>
+            <div class="mb-4">
+                <label style="color:#8b8fa8;font-size:0.85rem;font-weight:500" class="mb-1">Password</label>
+                <input type="password" name="password" class="form-control" placeholder="••••••••" required />
+            </div>
+            <button type="submit" class="btn-gold"><i class="fas fa-sign-in-alt me-2"></i>Sign In</button>
+        </form>
+
+        <div class="text-center mt-4">
+            <span style="color:#8b8fa8;font-size:0.85rem">Don't have an account?</span>
+            <a href="/Account/Register" style="color:#c9a84c;text-decoration:none;font-size:0.85rem;font-weight:500"> Register</a>
+        </div>
+
+        <div class="mt-4 p-3" style="background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.1);border-radius:10px">
+            <div style="color:#8b8fa8;font-size:0.78rem;text-align:center">
+                <strong style="color:#c9a84c">Default credentials:</strong><br>
+                admin@library.com / admin123
+            </div>
+        </div>
+    </div>
+</body>
+</html>

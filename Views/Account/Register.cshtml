@@ -1,0 +1,61 @@
+@{
+    ViewData["Title"] = "Register";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register — BookVault</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        body { background:#0d0f12; font-family:'DM Sans',sans-serif; min-height:100vh; display:flex; align-items:center; justify-content:center; }
+        .card { background:#141720; border:1px solid rgba(201,168,76,0.15); border-radius:20px; padding:3rem; width:100%; max-width:440px; }
+        .form-control { background:#1a1e2e !important; border:1px solid rgba(201,168,76,0.15) !important; color:#f0ece3 !important; border-radius:10px; padding:0.75rem 1rem; }
+        .form-control:focus { border-color:#c9a84c !important; box-shadow:0 0 0 3px rgba(201,168,76,0.1) !important; }
+        .form-control::placeholder { color:#8b8fa8; }
+        .btn-gold { background:#c9a84c; color:#0d0f12; font-weight:600; border:none; border-radius:10px; padding:0.75rem; width:100%; }
+        .btn-gold:hover { background:#e8c97a; color:#0d0f12; }
+        .alert-err { background:rgba(255,107,107,0.1); border:1px solid rgba(255,107,107,0.3); color:#ff6b6b; border-radius:10px; padding:0.75rem 1rem; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="text-center mb-4">
+            <div style="font-size:3rem">📚</div>
+            <h2 style="font-family:'Playfair Display',serif;color:#c9a84c;margin-top:0.5rem">Create Account</h2>
+            <p style="color:#8b8fa8;font-size:0.9rem">Join BookVault Library System</p>
+        </div>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert-err mb-3"><i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]</div>
+        }
+
+        <form method="post" action="/Account/Register">
+            @Html.AntiForgeryToken()
+            <div class="mb-3">
+                <label style="color:#8b8fa8;font-size:0.85rem;font-weight:500" class="mb-1">Email</label>
+                <input type="email" name="email" class="form-control" placeholder="you@example.com" required />
+            </div>
+            <div class="mb-3">
+                <label style="color:#8b8fa8;font-size:0.85rem;font-weight:500" class="mb-1">Password</label>
+                <input type="password" name="password" class="form-control" placeholder="Min 6 characters" required />
+            </div>
+            <div class="mb-4">
+                <label style="color:#8b8fa8;font-size:0.85rem;font-weight:500" class="mb-1">Confirm Password</label>
+                <input type="password" name="confirmPassword" class="form-control" placeholder="Repeat password" required />
+            </div>
+            <button type="submit" class="btn-gold"><i class="fas fa-user-plus me-2"></i>Create Account</button>
+        </form>
+
+        <div class="text-center mt-4">
+            <span style="color:#8b8fa8;font-size:0.85rem">Already have an account?</span>
+            <a href="/Account/Login" style="color:#c9a84c;text-decoration:none;font-size:0.85rem;font-weight:500"> Sign In</a>
+        </div>
+    </div>
+</body>
+</html>

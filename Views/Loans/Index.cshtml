@@ -1,0 +1,124 @@
+@model List<LibraryMS.Models.Loan>
+@{
+    ViewData["Title"] = "Loans";
+    var activeCount = Model.Count(l => !l.IsReturned && !l.IsOverdue);
+    var overdueCount = Model.Count(l => l.IsOverdue);
+    var returnedCount = Model.Count(l => l.IsReturned);
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">📋 Loan Management</h1>
+        <p class="page-subtitle">Track all book issues and returns</p>
+    </div>
+    <a href="/Loans/Issue" class="btn btn-gold px-4">
+        <i class="fas fa-hand-holding me-2"></i>Issue Book
+    </a>
+</div>
+
+<!-- Filter tabs -->
+<div class="d-flex gap-2 mb-4 flex-wrap">
+    @{
+        var filters = new[] {
+            ("", "All", Model.Count.ToString()),
+            ("active", "Active", activeCount.ToString()),
+            ("overdue", "Overdue", overdueCount.ToString()),
+            ("returned", "Returned", returnedCount.ToString())
+        };
+    }
+    @foreach (var (val, label, count) in filters)
+    {
+        var isActive = ViewBag.Status == val || (val == "" && ViewBag.Status == null);
+        <a href="/Loans?status=@val"
+           style="padding:0.5rem 1.25rem;border-radius:10px;text-decoration:none;font-size:0.875rem;font-weight:500;transition:all 0.2s;border:1px solid @(isActive ? "rgba(201,168,76,0.5)" : "rgba(201,168,76,0.15)");background:@(isActive ? "rgba(201,168,76,0.1)" : "transparent");color:@(isActive ? "#c9a84c" : "#8b8fa8")">
+            @label <span style="background:rgba(255,255,255,0.1);padding:0.1em 0.5em;border-radius:5px;font-size:0.75rem;margin-left:0.3rem">@count</span>
+        </a>
+    }
+</div>
+
+<div class="card-custom">
+    <div class="table-responsive">
+        <table class="table table-custom mb-0">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Book</th>
+                    <th>Member</th>
+                    <th>Issue Date</th>
+                    <th>Due Date</th>
+                    <th>Return Date</th>
+                    <th>Fine</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="9" class="text-center py-5" style="color:#8b8fa8">
+                            <div style="font-size:2.5rem">📭</div>
+                            <div class="mt-2">No loans found</div>
+                            <a href="/Loans/Issue" class="btn btn-gold btn-sm mt-3">Issue First Book</a>
+                        </td>
+                    </tr>
+                }
+                @foreach (var loan in Model)
+                {
+                    <tr class="@(loan.IsOverdue ? "overdue-row" : "")">
+                        <td style="color:#8b8fa8;font-size:0.85rem">#@loan.Id</td>
+                        <td>
+                            <div class="fw-500">@loan.Book?.Title</div>
+                            <div class="small" style="color:#8b8fa8">@loan.Book?.Author</div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div style="width:30px;height:30px;background:linear-gradient(135deg,#c9a84c,#e8c97a);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#0d0f12;font-size:0.75rem;flex-shrink:0">
+                                    @loan.Member?.FullName[0]
+                                </div>
+                                <div>
+                                    <div class="small fw-500">@loan.Member?.FullName</div>
+                                    <div class="small" style="color:#8b8fa8">@loan.Member?.MembershipId</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="color:#8b8fa8;font-size:0.85rem">@loan.IssueDate.ToString("dd MMM yyyy")</td>
+                        <td style="color:@(loan.IsOverdue ? "#ff6b6b" : "#8b8fa8");font-size:0.85rem">
+                            @loan.DueDate.ToString("dd MMM yyyy")
+                            @if (loan.IsOverdue)
+                            {
+                                <div class="small">@loan.DaysOverdue days late</div>
+                            }
+                        </td>
+                        <td style="color:#8b8fa8;font-size:0.85rem">
+                            @(loan.ReturnDate.HasValue ? loan.ReturnDate.Value.ToString("dd MMM yyyy") : "—")
+                        </td>
+                        <td style="color:@(loan.Fine > 0 ? "#ff6b6b" : "#8b8fa8")">
+                            @(loan.Fine > 0 ? $"Rs. {loan.Fine}" : "—")
+                        </td>
+                        <td>
+                            <span class="badge status-@loan.Status.ToLower()">@loan.Status</span>
+                        </td>
+                        <td>
+                            @if (!loan.IsReturned)
+                            {
+                                <form method="post" action="/Loans/Return/@loan.Id" class="d-inline"
+                                      onsubmit="return confirm('Mark this book as returned?')">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm"
+                                            style="background:rgba(45,212,167,0.1);color:#2dd4a7;border:1px solid rgba(45,212,167,0.3);border-radius:8px;font-size:0.75rem">
+                                        <i class="fas fa-undo me-1"></i>Return
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span style="color:#8b8fa8;font-size:0.8rem">✓ Done</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,99 @@
+@model LibraryMS.Models.Member
+@{
+    ViewData["Title"] = Model.FullName;
+}
+
+<div class="mb-3">
+    <a href="/Members" style="color:#8b8fa8;text-decoration:none;font-size:0.9rem">
+        <i class="fas fa-arrow-left me-1"></i> Back to Members
+    </a>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card-custom p-4 text-center">
+            <div style="width:90px;height:90px;background:linear-gradient(135deg,#c9a84c,#e8c97a);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-weight:700;color:#0d0f12;margin:0 auto 1.5rem">
+                @Model.FullName[0]
+            </div>
+            <h4 style="font-family:'Playfair Display',serif">@Model.FullName</h4>
+            <div style="color:#8b8fa8" class="mb-2">@Model.Email</div>
+            <div class="mb-3">
+                <span class="badge badge-genre">@Model.MembershipType</span>
+                <span class="badge @(Model.IsMembershipValid ? "badge-available" : "badge-unavailable") ms-1">
+                    @(Model.IsMembershipValid ? "Active" : "Inactive")
+                </span>
+            </div>
+            <div style="background:#1a1e2e;border-radius:10px;padding:1rem;text-align:left">
+                <div class="d-flex justify-content-between mb-2">
+                    <span style="color:#8b8fa8;font-size:0.85rem">Member ID</span>
+                    <code style="color:#c9a84c">@Model.MembershipId</code>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span style="color:#8b8fa8;font-size:0.85rem">Phone</span>
+                    <span class="small">@(string.IsNullOrEmpty(Model.Phone) ? "—" : Model.Phone)</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span style="color:#8b8fa8;font-size:0.85rem">Expires</span>
+                    <span class="small" style="color:@(Model.MembershipExpiry < DateTime.Now ? "#ff6b6b" : "inherit")">
+                        @Model.MembershipExpiry.ToString("dd MMM yyyy")
+                    </span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span style="color:#8b8fa8;font-size:0.85rem">Active Loans</span>
+                    <span style="color:#5b8af5">@Model.ActiveLoansCount / 3</span>
+                </div>
+            </div>
+            <div class="mt-3 d-flex gap-2">
+                <a href="/Members/Edit/@Model.Id" class="btn btn-gold flex-fill"><i class="fas fa-edit me-1"></i>Edit</a>
+                <a href="/Members/Delete/@Model.Id" class="btn btn-sm" style="background:rgba(255,107,107,0.1);color:#ff6b6b;border:1px solid rgba(255,107,107,0.3);border-radius:10px;padding:0.5rem 1rem">
+                    <i class="fas fa-trash"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card-custom p-4">
+            <h5 style="font-family:'Playfair Display',serif;margin-bottom:1.5rem">📖 Loan History</h5>
+            @if (Model.Loans?.Any() == true)
+            {
+                <table class="table table-custom mb-0">
+                    <thead>
+                        <tr>
+                            <th>Book</th>
+                            <th>Issue Date</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Fine</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var loan in Model.Loans.OrderByDescending(l => l.IssueDate))
+                        {
+                            <tr class="@(loan.IsOverdue ? "overdue-row" : "")">
+                                <td>
+                                    <div class="fw-500">@loan.Book?.Title</div>
+                                    <div class="small" style="color:#8b8fa8">@loan.Book?.Author</div>
+                                </td>
+                                <td style="color:#8b8fa8;font-size:0.85rem">@loan.IssueDate.ToString("dd MMM yyyy")</td>
+                                <td style="color:#8b8fa8;font-size:0.85rem">@loan.DueDate.ToString("dd MMM yyyy")</td>
+                                <td><span class="badge status-@loan.Status.ToLower()">@loan.Status</span></td>
+                                <td style="color:@(loan.Fine > 0 ? "#ff6b6b" : "#8b8fa8")">
+                                    @(loan.Fine > 0 ? $"Rs. {loan.Fine}" : "—")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="text-center py-5" style="color:#8b8fa8">
+                    <div style="font-size:3rem">📭</div>
+                    <div class="mt-2">No loan history</div>
+                    <a href="/Loans/Issue" class="btn btn-gold mt-3 btn-sm">Issue a Book</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

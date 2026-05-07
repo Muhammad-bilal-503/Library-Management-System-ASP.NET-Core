@@ -1,0 +1,37 @@
+@model LibraryMS.Models.Book
+@{
+    ViewData["Title"] = "Delete Book";
+}
+
+<div class="mb-3">
+    <a href="/Books" style="color:#8b8fa8;text-decoration:none;font-size:0.9rem">
+        <i class="fas fa-arrow-left me-1"></i> Back to Books
+    </a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card-custom p-4 text-center">
+            <div style="font-size:3rem;margin-bottom:1rem">🗑️</div>
+            <h3 style="font-family:'Playfair Display',serif;color:#ff6b6b">Delete Book?</h3>
+            <p style="color:#8b8fa8" class="mt-2">This action cannot be undone. The following book will be permanently removed:</p>
+            <div style="background:#1a1e2e;border-radius:12px;padding:1.5rem;margin:1.5rem 0">
+                <img src="https://covers.openlibrary.org/b/isbn/@Model.ISBN.Replace("-","")-M.jpg"
+                     style="height:120px;object-fit:cover;border-radius:8px;margin-bottom:1rem"
+                     onerror="this.style.display='none'" />
+                <h5 style="font-family:'Playfair Display',serif">@Model.Title</h5>
+                <div style="color:#8b8fa8">@Model.Author</div>
+                <div class="mt-2"><span class="badge badge-genre">@Model.Genre</span></div>
+            </div>
+            <div class="d-flex gap-3 justify-content-center">
+                <form method="post" action="/Books/Delete/@Model.Id">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn px-5" style="background:#ff6b6b;color:white;border-radius:10px;font-weight:600">
+                        <i class="fas fa-trash me-2"></i>Yes, Delete
+                    </button>
+                </form>
+                <a href="/Books" class="btn btn-outline-gold px-5">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>

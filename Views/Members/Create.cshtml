@@ -1,0 +1,72 @@
+@model LibraryMS.Models.Member
+@{
+    ViewData["Title"] = "Add Member";
+}
+
+<div class="mb-3">
+    <a href="/Members" style="color:#8b8fa8;text-decoration:none;font-size:0.9rem">
+        <i class="fas fa-arrow-left me-1"></i> Back to Members
+    </a>
+</div>
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">👤 Add New Member</h1>
+        <p class="page-subtitle">Register a new library member</p>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card-custom p-4">
+            <form method="post" action="/Members/Create">
+                @Html.AntiForgeryToken()
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Full Name *</label>
+                        <input type="text" name="FullName" class="form-control form-control-custom" placeholder="e.g. Ahmed Khan" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Email Address *</label>
+                        <input type="email" name="Email" class="form-control form-control-custom" placeholder="email@example.com" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Phone Number</label>
+                        <input type="text" name="Phone" class="form-control form-control-custom" placeholder="0300-1234567" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Membership Type</label>
+                        <select name="MembershipType" class="form-select form-control-custom">
+                            <option value="0">Regular</option>
+                            <option value="1">Student</option>
+                            <option value="2">Premium</option>
+                            <option value="3">Staff</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Membership Expiry</label>
+                        <input type="date" name="MembershipExpiry" class="form-control form-control-custom"
+                               value="@DateTime.Now.AddYears(1).ToString("yyyy-MM-dd")" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Status</label>
+                        <select name="IsActive" class="form-select form-control-custom">
+                            <option value="true">Active</option>
+                            <option value="false">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Address</label>
+                        <textarea name="Address" class="form-control form-control-custom" rows="2" placeholder="Member's address..."></textarea>
+                    </div>
+                </div>
+                <div class="d-flex gap-3 mt-4">
+                    <button type="submit" class="btn btn-gold px-5">
+                        <i class="fas fa-user-plus me-2"></i>Register Member
+                    </button>
+                    <a href="/Members" class="btn btn-outline-gold px-4">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

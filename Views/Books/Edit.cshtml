@@ -1,0 +1,89 @@
+@model LibraryMS.Models.Book
+@{
+    ViewData["Title"] = "Edit Book";
+}
+
+<div class="mb-3">
+    <a href="/Books" style="color:#8b8fa8;text-decoration:none;font-size:0.9rem">
+        <i class="fas fa-arrow-left me-1"></i> Back to Books
+    </a>
+</div>
+
+<div class="page-header">
+    <h1 class="page-title">✏️ Edit Book</h1>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card-custom p-4">
+            <form method="post" action="/Books/Edit/@Model.Id">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="Id" value="@Model.Id" />
+                <div class="row g-3">
+                    <div class="col-md-8">
+                        <label class="form-label">Book Title *</label>
+                        <input type="text" name="Title" value="@Model.Title" class="form-control form-control-custom" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Published Year</label>
+                        <input type="number" name="PublishedYear" value="@Model.PublishedYear" class="form-control form-control-custom" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Author *</label>
+                        <input type="text" name="Author" value="@Model.Author" class="form-control form-control-custom" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">ISBN</label>
+                        <input type="text" name="ISBN" id="isbnInput" value="@Model.ISBN" class="form-control form-control-custom" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Genre</label>
+                        <select name="Genre" class="form-select form-control-custom">
+                            @{
+                                var genres = new[]{"Technology","Fiction","Non-Fiction","Science","History","Biography","Self-Help","Business","Philosophy","Religion","Other"};
+                                foreach (var g in genres)
+                                {
+                                    if (Model.Genre == g)
+                                    {
+                                        <option value="@g" selected="selected">@g</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@g">@g</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Publisher</label>
+                        <input type="text" name="Publisher" value="@Model.Publisher" class="form-control form-control-custom" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Total Copies</label>
+                        <input type="number" name="TotalCopies" value="@Model.TotalCopies" class="form-control form-control-custom" min="1" />
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Description</label>
+                        <textarea name="Description" class="form-control form-control-custom" rows="3">@Model.Description</textarea>
+                    </div>
+                </div>
+                <div class="d-flex gap-3 mt-4">
+                    <button type="submit" class="btn btn-gold px-5"><i class="fas fa-save me-2"></i>Save Changes</button>
+                    <a href="/Books" class="btn btn-outline-gold px-4">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card-custom p-4">
+            <h6 style="color:#c9a84c;margin-bottom:1rem"><i class="fas fa-image me-2"></i>Current Cover</h6>
+            <img id="coverImg" src="https://covers.openlibrary.org/b/isbn/@Model.ISBN.Replace("-","")-M.jpg"
+                 style="width:100%;height:250px;object-fit:cover;border-radius:12px"
+                 onerror="this.style.display='none';document.getElementById('noCover').style.display='flex'" />
+            <div id="noCover" style="display:none;height:250px;background:linear-gradient(135deg,#1a1e2e,#252a3d);border-radius:12px;align-items:center;justify-content:center">
+                <div style="text-align:center"><div style="font-size:3rem">📖</div><div style="color:#8b8fa8;font-size:0.8rem;margin-top:0.5rem">No cover</div></div>
+            </div>
+        </div>
+    </div>
+</div>

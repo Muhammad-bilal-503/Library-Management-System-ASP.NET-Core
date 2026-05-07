@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] — BookVault Library</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --bg-dark: #0d0f12;
+            --bg-card: #141720;
+            --bg-surface: #1a1e2e;
+            --accent-gold: #c9a84c;
+            --accent-gold-light: #e8c97a;
+            --accent-green: #2dd4a7;
+            --accent-red: #ff6b6b;
+            --accent-blue: #5b8af5;
+            --text-primary: #f0ece3;
+            --text-muted: #8b8fa8;
+            --border: rgba(201,168,76,0.15);
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+        .navbar-custom {
+            background: rgba(13,15,18,0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .brand-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-gold) !important;
+            text-decoration: none;
+            letter-spacing: 0.02em;
+        }
+        .brand-logo span { color: var(--text-primary); }
+        .nav-link-custom {
+            color: var(--text-muted) !important;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem !important;
+            border-radius: 8px;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex; align-items: center; gap: 0.4rem;
+        }
+        .nav-link-custom:hover { color: var(--accent-gold) !important; background: rgba(201,168,76,0.08); }
+        .nav-link-custom.active { color: var(--accent-gold) !important; }
+        .btn-nav-login {
+            background: var(--accent-gold);
+            color: #0d0f12 !important;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 0.45rem 1.2rem !important;
+        }
+        .btn-nav-login:hover { background: var(--accent-gold-light); }
+
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed; left: 0; top: 70px;
+            width: 220px; height: calc(100vh - 70px);
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            overflow-y: auto;
+        }
+        .sidebar-section { margin-bottom: 1.5rem; }
+        .sidebar-label {
+            font-size: 0.7rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.1em;
+            color: var(--text-muted); margin-bottom: 0.5rem;
+            padding-left: 0.5rem;
+        }
+        .sidebar-link {
+            display: flex; align-items: center; gap: 0.75rem;
+            padding: 0.6rem 0.75rem;
+            border-radius: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            margin-bottom: 0.2rem;
+        }
+        .sidebar-link:hover { color: var(--text-primary); background: rgba(255,255,255,0.05); }
+        .sidebar-link.active { color: var(--accent-gold); background: rgba(201,168,76,0.1); }
+        .sidebar-link i { width: 16px; text-align: center; }
+
+        /* MAIN CONTENT */
+        .main-content {
+            margin-left: 220px;
+            padding: 2rem;
+            min-height: calc(100vh - 70px);
+        }
+        @@media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; }
+        }
+
+        /* CARDS */
+        .card-custom {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .stat-card:hover { transform: translateY(-2px); border-color: var(--accent-gold); }
+        .stat-card .stat-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+        .stat-number { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; line-height: 1; }
+        .stat-label { color: var(--text-muted); font-size: 0.85rem; margin-top: 0.3rem; }
+
+        /* BOOK CARDS */
+        .book-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .book-card:hover { transform: translateY(-4px); border-color: rgba(201,168,76,0.4); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .book-cover {
+            width: 100%; height: 220px;
+            object-fit: cover;
+            background: var(--bg-surface);
+        }
+        .book-cover-placeholder {
+            width: 100%; height: 220px;
+            background: linear-gradient(135deg, #1a1e2e, #252a3d);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3rem; color: var(--accent-gold);
+        }
+        .badge-available { background: rgba(45,212,167,0.15); color: var(--accent-green); border: 1px solid rgba(45,212,167,0.3); }
+        .badge-unavailable { background: rgba(255,107,107,0.15); color: var(--accent-red); border: 1px solid rgba(255,107,107,0.3); }
+        .badge-genre { background: rgba(201,168,76,0.1); color: var(--accent-gold); border: 1px solid var(--border); }
+
+        /* TABLES */
+        .table-custom { color: var(--text-primary); }
+        .table-custom th { background: var(--bg-surface); color: var(--text-muted); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; border-color: var(--border); padding: 1rem; }
+        .table-custom td { border-color: var(--border); padding: 1rem; vertical-align: middle; }
+        .table-custom tbody tr { transition: background 0.15s; }
+        .table-custom tbody tr:hover { background: rgba(255,255,255,0.03); }
+
+        /* BUTTONS */
+        .btn-gold { background: var(--accent-gold); color: #0d0f12; font-weight: 600; border: none; border-radius: 10px; }
+        .btn-gold:hover { background: var(--accent-gold-light); color: #0d0f12; }
+        .btn-outline-gold { border: 1px solid var(--accent-gold); color: var(--accent-gold); background: transparent; border-radius: 10px; }
+        .btn-outline-gold:hover { background: rgba(201,168,76,0.1); color: var(--accent-gold); }
+
+        /* FORMS */
+        .form-control-custom {
+            background: var(--bg-surface) !important;
+            border: 1px solid var(--border) !important;
+            color: var(--text-primary) !important;
+            border-radius: 10px;
+        }
+        .form-control-custom:focus { border-color: var(--accent-gold) !important; box-shadow: 0 0 0 3px rgba(201,168,76,0.1) !important; }
+        .form-label { color: var(--text-muted); font-size: 0.85rem; font-weight: 500; }
+
+        /* ALERTS */
+        .alert-success-custom { background: rgba(45,212,167,0.1); border: 1px solid rgba(45,212,167,0.3); color: var(--accent-green); border-radius: 10px; }
+        .alert-danger-custom { background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.3); color: var(--accent-red); border-radius: 10px; }
+
+        /* PAGE HEADER */
+        .page-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .page-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; margin: 0; }
+        .page-subtitle { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* SEARCH BAR */
+        .search-bar {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* BADGE overrides */
+        .badge { font-weight: 500; padding: 0.4em 0.75em; border-radius: 6px; }
+
+        /* STATUS badges */
+        .status-active { background: rgba(91,138,245,0.15); color: var(--accent-blue); border: 1px solid rgba(91,138,245,0.3); }
+        .status-overdue { background: rgba(255,107,107,0.15); color: var(--accent-red); border: 1px solid rgba(255,107,107,0.3); }
+        .status-returned { background: rgba(45,212,167,0.15); color: var(--accent-green); border: 1px solid rgba(45,212,167,0.3); }
+
+        /* Overdue highlight */
+        .overdue-row td { background: rgba(255,107,107,0.04) !important; }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar-custom">
+        <div class="container-fluid px-4 d-flex align-items-center justify-content-between">
+            <a class="brand-logo" href="/">📚 Book<span>Vault</span></a>
+            <div class="d-flex align-items-center gap-2">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <span class="text-muted small me-2"><i class="fas fa-user-circle me-1"></i>@User.Identity.Name</span>
+                    <form method="post" action="/Account/Logout" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="nav-link-custom btn border-0 bg-transparent">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <a href="/Account/Login" class="btn-nav-login nav-link-custom">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                }
+            </div>
+        </div>
+    </nav>
+
+    <!-- SIDEBAR -->
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-label">Main</div>
+                <a href="/" class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-label">Library</div>
+                <a href="/Books" class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Books" ? "active" : "")">
+                    <i class="fas fa-book"></i> Books
+                </a>
+                <a href="/Books/Create" class="sidebar-link">
+                    <i class="fas fa-plus-circle"></i> Add Book
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-label">Members</div>
+                <a href="/Members" class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Members" ? "active" : "")">
+                    <i class="fas fa-users"></i> All Members
+                </a>
+                <a href="/Members/Create" class="sidebar-link">
+                    <i class="fas fa-user-plus"></i> Add Member
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-label">Loans</div>
+                <a href="/Loans" class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Loans" ? "active" : "")">
+                    <i class="fas fa-exchange-alt"></i> All Loans
+                </a>
+                <a href="/Loans/Issue" class="sidebar-link">
+                    <i class="fas fa-hand-holding"></i> Issue Book
+                </a>
+            </div>
+        </div>
+    }
+
+    <!-- MAIN CONTENT -->
+    <div class="@(User.Identity?.IsAuthenticated == true ? "main-content" : "container py-4")">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert-success-custom p-3 mb-3 d-flex align-items-center gap-2">
+                <i class="fas fa-check-circle"></i> @TempData["Success"]
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert-danger-custom p-3 mb-3 d-flex align-items-center gap-2">
+                <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+            </div>
+        }
+        @RenderBody()
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
