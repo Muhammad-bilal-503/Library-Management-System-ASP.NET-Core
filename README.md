@@ -8,7 +8,7 @@
 
 <br /><br />
 
-# 📚 BookVault
+# BookVault
 ### Library Management System
 
 **A full-stack, containerized web application built with ASP.NET Core 8, Entity Framework Core, and Docker.**  
@@ -20,20 +20,20 @@ Manage books, members, and loans — with automatic cover images from the Open L
 
 ---
 
-## ✨ Features
+##  Features
 
 | Module | Capabilities |
 |--------|-------------|
-| 📚 **Book Management** | Add, edit, delete, and search books · Auto cover images via ISBN (Open Library API) |
-| 👥 **Member Management** | Register members · Membership types: Student, Regular, Premium, Staff |
-| 📋 **Loan System** | Issue & return books · 14-day loan period · Rs. 10/day overdue fine calculation |
-| 🔐 **Authentication** | Secure login & registration via ASP.NET Core Identity |
-| 🐳 **Docker** | Multi-stage Dockerfile · One-command deploy with Docker Compose |
-| 📊 **Dashboard** | Real-time stats — total books, members, active loans, overdue alerts |
+|  **Book Management** | Add, edit, delete, and search books · Auto cover images via ISBN (Open Library API) |
+|  **Member Management** | Register members · Membership types: Student, Regular, Premium, Staff |
+|  **Loan System** | Issue & return books · 14-day loan period · Rs. 10/day overdue fine calculation |
+|  **Authentication** | Secure login & registration via ASP.NET Core Identity |
+|  **Docker** | Multi-stage Dockerfile · One-command deploy with Docker Compose |
+|  **Dashboard** | Real-time stats — total books, members, active loans, overdue alerts |
 
 ---
 
-## 🏗️ OOP Principles
+##  OOP Principles
 
 This project explicitly demonstrates all four pillars of Object-Oriented Programming:
 
