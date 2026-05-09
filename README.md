@@ -190,7 +190,7 @@ When a book is added or edited, the ISBN is used to construct the cover URL. If 
 
 ## 📄 License
 
-This project was developed as an **Open-Ended Lab submission** for a Software Engineering course.  
+This project was developed as an **Open-Ended Lab submission** for a Advance Visual Programming course.  
 Free to use for educational purposes.
 
 ---
