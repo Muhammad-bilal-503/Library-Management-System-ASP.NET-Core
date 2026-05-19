@@ -72,7 +72,7 @@ http://localhost:8080
 
 ---
 
-### ▶ Option 2 — Run Locally
+###  Option 2 — Run Locally
 
 ```bash
 # Restore dependencies and run
@@ -84,7 +84,7 @@ http://localhost:5000
 
 ---
 
-### 🔑 Default Credentials
+###  Default Credentials
 
 ```
 Email    :  admin@library.com
