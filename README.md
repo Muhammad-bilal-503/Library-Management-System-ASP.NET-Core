@@ -46,7 +46,7 @@ Abstraction    →  Person cannot be instantiated — enforces a contract on sub
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 
@@ -55,7 +55,7 @@ Abstraction    →  Person cannot be instantiated — enforces a contract on sub
 
 ---
 
-### ▶ Option 1 — Docker (Recommended)
+###  Option 1 — Docker (Recommended)
 
 ```bash
 # 1. Clone or extract the project
